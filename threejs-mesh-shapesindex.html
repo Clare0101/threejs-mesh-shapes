@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="CS4406 Computer Graphics - Assignment #2" />
+    <title>Assignment 2</title>
+
+    <style id="jsbin-css">
+        /* Ensure the canvas takes full screen */
+        body { margin: 0; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Welcome to Assignment 2</h1>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.5/dat.gui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.1/math.min.js"></script>
+    <script type="text/javascript">
+        // Setup scene, camera, and renderer
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create a Pentagon
+        var shape = new THREE.Shape();
+        var radius = 1; // Radius of the pentagon
+        var vertices = 5;
+
+        for (var i = 0; i < vertices; i++) {
+            var angle = (i / vertices) * (Math.PI * 2);
+            var x = radius * Math.cos(angle);
+            var y = radius * Math.sin(angle);
+            if (i === 0) {
+                shape.moveTo(x, y);
+            } else {
+                shape.lineTo(x, y);
+            }
+        }
+        shape.closePath();
+
+        var geometry = new THREE.ShapeGeometry(shape);
+        var material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color
+        var pentagon = new THREE.Mesh(geometry, material);
+        scene.add(pentagon);
+
+        camera.position.z = 3;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            pentagon.rotation.x += 0.01; // Spin slowly on X-axis
+            pentagon.rotation.y += 0.01; // Spin slowly on Y-axis
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
