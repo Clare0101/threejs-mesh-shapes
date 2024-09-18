@@ -20,46 +20,140 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.1/math.min.js"></script>
     <script type="text/javascript">
-        // Setup scene, camera, and renderer
+      // Setup scene, camera, and renderer
+
         var scene = new THREE.Scene();
+
         var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
         var renderer = new THREE.WebGLRenderer();
 
+
+
         renderer.setSize(window.innerWidth, window.innerHeight);
+
         document.body.appendChild(renderer.domElement);
 
-        // Create a Pentagon
-        var shape = new THREE.Shape();
-        var radius = 1; // Radius of the pentagon
-        var vertices = 5;
 
-        for (var i = 0; i < vertices; i++) {
-            var angle = (i / vertices) * (Math.PI * 2);
-            var x = radius * Math.cos(angle);
-            var y = radius * Math.sin(angle);
-            if (i === 0) {
-                shape.moveTo(x, y);
-            } else {
-                shape.lineTo(x, y);
-            }
-        }
-        shape.closePath();
 
-        var geometry = new THREE.ShapeGeometry(shape);
-        var material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color
-        var pentagon = new THREE.Mesh(geometry, material);
-        scene.add(pentagon);
+       // Create a Pentagon (figure with 5 vertices/sides)
 
-        camera.position.z = 3;
+var shape = new THREE.Shape(); // Initialize a new shape object from the THREE.js library
 
-        function animate() {
-            requestAnimationFrame(animate);
-            pentagon.rotation.x += 0.01; // Spin slowly on X-axis
-            pentagon.rotation.y += 0.01; // Spin slowly on Y-axis
-            renderer.render(scene, camera);
-        }
+var radius = 1; // Radius of the pentagon
 
-        animate();
+var vertices = 5; // Number of vertices
+
+
+
+// Loop through each vertex based on the defined number of vertices
+
+for (var i = 0; i < vertices; i++) {
+
+    // Calculate the angle for the current vertex based on its position
+
+    var angle = (i / vertices) * (Math.PI * 2);
+
+
+
+    // Calculate the x coordinate of the vertex using the cosine of the angle and the radius
+
+    var x = radius * Math.cos(angle);
+
+
+
+    // Calculate the y coordinate of the vertex using the sine of the angle and the radius
+
+    var y = radius * Math.sin(angle);
+
+
+
+    // If it's the first vertex, move to this position, otherwise draw a line to this vertex
+
+    if (i === 0) {
+
+        shape.moveTo(x, y); // Move the starting point to the first vertex without drawing
+
+    } else {
+
+        shape.lineTo(x, y); // Draw a line to the next vertex
+
+    }
+
+}
+
+
+
+// Close the path of the shape, completing the pentagon
+
+shape.closePath();
+
+
+
+       // Create a geometry for the shape
+
+var geometry = new THREE.ShapeGeometry(shape);
+
+
+
+// Define a basic material with a red color
+
+var material = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color
+
+
+
+// Create a mesh from the geometry and material
+
+var pentagon = new THREE.Mesh(geometry, material);
+
+
+
+// Add the pentagon mesh to the scene so it will be rendered
+
+scene.add(pentagon);
+
+
+
+// Set the camera's position along the z-axis to 3 units away from the origin
+
+camera.position.z = 3;
+
+
+
+// Define the animate function to update the scene continuously
+
+function animate() {
+
+    // Request animation frame for smooth animations
+
+    requestAnimationFrame(animate);
+
+
+
+    // Rotate the pentagon slowly around the X-axis
+
+    pentagon.rotation.x += 0.01; // Spin slowly on X-axis
+
+
+
+    // Rotate the pentagon slowly around the Y-axis
+
+    pentagon.rotation.y += 0.01; // Spin slowly on Y-axis
+
+
+
+    // Render the updated scene with the current camera view
+
+    renderer.render(scene, camera);
+
+}
+
+
+
+// Start the animation loop
+
+animate();
+
     </script>
 </body>
 </html>
