@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="CS4406 Computer Graphics - Assignment #3" />
+    <title>Assignment 3</title>
+
+    <style>
+        body { margin: 0; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Welcome to Assignment 3</h1>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <script http://uopeopleweb.com/js/math.js"></script>
+    <script http://uopeopleweb.com/js/Detector.js"></script>
+    <script type="text/javascript">
+
+ // set the scene size
+    const WIDTH = 750, HEIGHT = 750;
+    // set some camera attributes
+    const VIEW_ANGLE = 45, ASPECT = WIDTH / HEIGHT, NEAR = 1, FAR = 1000;
+    // create a WebGL renderer, camera, and a scene
+    const renderer = new THREE.WebGLRenderer();
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(VIEW_ANGLE,ASPECT,NEAR,FAR);
+     // the camera starts at 0,0,0 so pull it back
+    camera.position.z = 5;      
+    // add the camera to the scene
+    scene.add(camera)
+    // set up the camera controls.  Please keep in mind that what this does is move the entire scene around.
+    // because the entire scene is moving the position of the camera and lights in relation to objects within
+    // the scene doesn't change so the lighting on the surface of the object(s) will not change either
+
+    // start the renderer
+    renderer.setSize(WIDTH, HEIGHT);
+    document.body.appendChild(renderer.domElement);
+
+// Create a bouncing torus knot 
+// Define the geometry for a torus knot shape with given parameters
+const geometry = new THREE.TorusKnotGeometry(0.2, 0.1, 100, 16); // Smaller diameter, with radial segments and tubular segments
+
+// Create a material for the torus knot, using a Phong material for shiny surfaces
+const material = new THREE.MeshPhongMaterial({ color: 0xff0000, flatShading: true }); // Set color to red and enable flat shading
+
+// Combine the geometry and material into a mesh, which represents the actual object in the scene
+const torusKnot = new THREE.Mesh(geometry, material);
+
+// Add the torus knot mesh to the scene so it will be rendered
+scene.add(torusKnot);
+
+// Set up lighting
+// Create a point light to illuminate the scene, with specific color and range
+const light = new THREE.PointLight(0xFFFFAA, 1, 100); // Light color is a soft yellow, intensity is 1, and it affects up to 100 units away
+
+// Position the light in a specific location in the 3D space (top left corner)
+light.position.set(-3, 3, 5); // X, Y, Z positions of the light source
+
+// Add the point light to the scene for it to shine on objects
+scene.add(light);
+
+// Add ambient light to the scene for a subtle, non-directional light
+scene.add(new THREE.AmbientLight(0x404040)); // Creates a soft light that affects all objects
+
+// Position the camera
+// Set the camera's position along the Z-axis, moving it away from the origin so the scene can be viewed
+camera.position.z = 5; // Move camera back 5 units to see the objects clearly
+
+// Calculate the boundaries based on the camera settings
+const boundary = 2.2; // Set boundary to 2.2 units in the scene for the object's movement
+
+// Initialize variables for bouncing
+// Define the speed vector for the torus knot's movement in the x, y, and z directions
+let speed = new THREE.Vector3(0.05, 0.03, 0); // Object moves slightly faster in the x-direction
+
+// Create an animate function to update the scene
+function animate() {
+    // Request the next animation frame, creating a loop
+    requestAnimationFrame(animate);
+
+    // Update the position of the torus knot by adding the speed vector to its current position
+    torusKnot.position.add(speed);
+
+    // Check for bouncing off the left or right walls
+    // If the torus knot goes beyond the defined boundary (adjusting for its size)
+    if (torusKnot.position.x > boundary - 0.5 || torusKnot.position.x < -boundary + 0.5) { 
+        speed.x *= -1; // Reverse the speed in the x-direction, making it bounce off
+        changeColor(); // Call a function to change the color of the torus knot upon bouncing
+    }
+
+    // Check for bouncing off the top or bottom walls
+    // If the torus knot goes beyond the defined boundary (adjusting for its size)
+    if (torusKnot.position.y > boundary - 0.5 || torusKnot.position.y < -boundary + 0.5) { 
+        speed.y *= -1; // Reverse the speed in the y-direction, making it bounce off
+        changeColor(); // Call a function to change the color of the torus knot upon bouncing
+    }
+
+    // Render the updated scene from the perspective of the camera
+    renderer.render(scene, camera); 
+}
+
+// Function to change color of the torus knot
+// This function will be called whenever the torus knot bounces
+function changeColor() {
+    // Generate a random color by creating a random number in the range of 0x000000 to 0xffffff
+    const newColor = Math.random() * 0xffffff; // This creates a random hex color value
+
+    // Update the material's color to the newly generated random color
+    material.color.setHex(newColor); // Change the torus knot's material color
+}
+
+// Start the animation
+animate(); // Call the animate function to begin the animation loop
+</script>
+</body>
+</html>
